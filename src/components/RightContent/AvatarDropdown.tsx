@@ -1,4 +1,5 @@
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { userLogoutUsingPOST } from '@/services/beanbi/userController';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { history, useModel } from '@umijs/max';
 import { Spin } from 'antd';
@@ -7,7 +8,6 @@ import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
 import { flushSync } from 'react-dom';
 import HeaderDropdown from '../HeaderDropdown';
-import {userLogoutUsingPOST} from "@/services/beanbi/userController";
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -17,7 +17,7 @@ export type GlobalHeaderRightProps = {
 export const AvatarName = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
-  return <span className="anticon">{currentUser?.userName}</span>;
+  return <span className="anticon">{currentUser?.userName ?? currentUser?.userAccount}</span>;
 };
 
 export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, children }) => {
@@ -40,6 +40,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
       });
     }
   };
+
   const actionClassName = useEmotionCss(({ token }) => {
     return {
       display: 'flex',
@@ -67,7 +68,10 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
         loginOut();
         return;
       }
-      history.push(`/account/${key}`);
+      if (key === 'info') {
+        history.push('/user/info');
+        return;
+      }
     },
     [setInitialState],
   );
@@ -90,28 +94,17 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
 
   const { currentUser } = initialState;
 
-  if (!currentUser || !currentUser.userName) {
+  if (!currentUser) {
     return loading;
   }
 
   const menuItems = [
-    ...(menu
-      ? [
-          {
-            key: 'center',
-            icon: <UserOutlined />,
-            label: '个人中心',
-          },
-          {
-            key: 'settings',
-            icon: <SettingOutlined />,
-            label: '个人设置',
-          },
-          {
-            type: 'divider' as const,
-          },
-        ]
-      : []),
+    {
+      key: 'info',
+      icon: <UserOutlined />,
+      label: '个人中心',
+    },
+
     {
       key: 'logout',
       icon: <LogoutOutlined />,

@@ -7,6 +7,13 @@ export default [
       { name: '注册', path: '/user/register', component: './User/Register' },
     ],
   },
+  {
+    path: '/user',
+    layout: {
+      hideFooter: true,
+    },
+    routes: [{name: '个人信息', path: '/user/info', component: './User/Info'}],
+  },
 
   { path: '/add_chart', name: '智能分析', icon: 'barChart', component: './AddChart' },
   { path: '/add_chart_async', name: '智能分析（异步）', icon: 'barChart', component: './AddChartAsync' },

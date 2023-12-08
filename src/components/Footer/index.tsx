@@ -31,6 +31,7 @@ const Footer: React.FC = () => {
         //   blankTarget: true,
         // },
       ]}
+      className={"fixedFooter"}
     />
   );
 };

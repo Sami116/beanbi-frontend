@@ -175,6 +175,7 @@ declare namespace API {
     createTime?: string;
     id?: number;
     updateTime?: string;
+    userAccount?: string;
     userAvatar?: string;
     userName?: string;
     userRole?: string;

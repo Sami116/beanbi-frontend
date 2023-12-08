@@ -1,4 +1,4 @@
-import {genChartByAiAsyncMQUsingPOST, genChartByAiAsyncUsingPOST} from '@/services/beanbi/chartController';
+import {genChartByAiAsyncMQUsingPOST} from '@/services/beanbi/chartController';
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, Card, Form, Input, message, Select, Space, Upload } from 'antd';
 import { useForm } from 'antd/es/form/Form';
@@ -11,7 +11,7 @@ import React, { useState } from 'react';
  */
 const AddChartAsync: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [form, setForm] = useForm();
+  const [form] = useForm();
   /**
    * 提交
    * @param values
