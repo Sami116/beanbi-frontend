@@ -1,6 +1,6 @@
 # Bean智能 BI
 
-This project is initialized with [Bean智能 BI](https://pro.ant.design). Follow is the quick guide for how to use.
+基于React + Spring Boot+ MQ+AIGC的智能数据分析平台。 区别于传统Bl，用户只需要导入原始数据集、并输入分析诉求，就能自动生成可视化图表及分析结论，实现数据分析的降本增效
 
 ## Environment Prepare
 
@@ -52,6 +52,3 @@ npm run lint:fix
 npm test
 ```
 
-## More
-
-You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).
