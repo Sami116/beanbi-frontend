@@ -29,6 +29,36 @@ export async function deleteUserUsingPOST(
   });
 }
 
+/** userRegisterByEmail POST /api/user/email/register */
+export async function userRegisterByEmailUsingPOST(
+  body: API.UserRegisterRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponselong>('/api/user/email/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** sendCode GET /api/user/emailCaptcha */
+export async function sendCodeUsingGET(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.sendCodeUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseboolean>('/api/user/emailCaptcha', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** getUserById GET /api/user/get */
 export async function getUserByIdUsingGET(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -141,6 +171,18 @@ export async function updateUserUsingPOST(
   options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseboolean>('/api/user/update', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** updateUserAvatar POST /api/user/update/avatar */
+export async function updateUserAvatarUsingPOST(body: string, options?: { [key: string]: any }) {
+  return request<API.BaseResponseboolean>('/api/user/update/avatar', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

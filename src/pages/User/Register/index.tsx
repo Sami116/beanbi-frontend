@@ -1,8 +1,13 @@
 import Footer from '@/components/Footer';
-import { userRegisterUsingPOST } from '@/services/beanbi/userController';
+import {
+  sendCodeUsingGET,
+  userRegisterByEmailUsingPOST,
+  userRegisterUsingPOST,
+} from '@/services/beanbi/userController';
 import { Link } from '@@/exports';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
+import { ProFormCaptcha } from '@ant-design/pro-form';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { Helmet, history } from '@umijs/max';
 import { message, Tabs } from 'antd';
@@ -24,11 +29,24 @@ const Register: React.FC = () => {
   });
 
   const handleSubmit = async (values: API.UserRegisterRequest) => {
+    const { userPassword, checkPassword } = values;
+    console.log(values);
+    if (userPassword !== checkPassword) {
+      message.error('两次输入密码不一致');
+      return;
+    }
     try {
-      // 登录
-      const res = await userRegisterUsingPOST({
-        ...values,
-      });
+      // 注册
+      let res;
+      if (type === 'account') {
+        res = await userRegisterUsingPOST({
+          ...values,
+        });
+      } else {
+        res = await userRegisterByEmailUsingPOST({
+          ...values,
+        });
+      }
       if (res.message === 'ok') {
         const defaultRegisterSuccessMessage = '注册成功！';
         message.success(defaultRegisterSuccessMessage);
@@ -84,6 +102,10 @@ const Register: React.FC = () => {
                 key: 'account',
                 label: '账户密码注册',
               },
+              {
+                key: 'emailRegister',
+                label: 'QQ邮箱注册',
+              },
             ]}
           />
 
@@ -130,6 +152,66 @@ const Register: React.FC = () => {
                     message: '密码是必填项！',
                   },
                 ]}
+              />
+            </>
+          )}
+
+          {type === 'emailRegister' && (
+            <>
+              <ProFormText
+                fieldProps={{
+                  size: 'large',
+                  prefix: <MailOutlined />,
+                }}
+                name="emailNum"
+                placeholder={'请输入QQ邮箱'}
+                rules={[
+                  {
+                    required: true,
+                    message: '邮箱是必填项！',
+                  },
+                  {
+                    // pattern: /^1\d{10}$/,    手机号码正则表达式
+                    pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+                    message: '不合法的邮箱！',
+                  },
+                ]}
+              />
+              <ProFormCaptcha
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockOutlined />,
+                }}
+                captchaProps={{
+                  size: 'large',
+                }}
+                placeholder={'请输入验证码'}
+                captchaTextRender={(timing, count) => {
+                  if (timing) {
+                    return `${count} ${'秒后重新获取'}`;
+                  }
+                  return '获取验证码';
+                }}
+                name="emailCaptcha"
+                phoneName="emailNum"
+                rules={[
+                  {
+                    required: true,
+                    message: '验证码是必填项！',
+                  },
+                ]}
+                onGetCaptcha={async (emailNum) => {
+                  const captchaType: string = 'register';
+                  const result = await sendCodeUsingGET({
+                    emailNum,
+                    captchaType,
+                  });
+                  // @ts-ignore
+                  if (result === false) {
+                    return;
+                  }
+                  message.success(result.data);
+                }}
               />
             </>
           )}

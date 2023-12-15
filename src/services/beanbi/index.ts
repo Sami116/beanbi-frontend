@@ -4,13 +4,11 @@
 // API 唯一标识：
 import * as basicErrorController from './basicErrorController';
 import * as chartController from './chartController';
-import * as fileController from './fileController';
 import * as queueController from './queueController';
 import * as userController from './userController';
 export default {
   basicErrorController,
   chartController,
-  fileController,
   queueController,
   userController,
 };

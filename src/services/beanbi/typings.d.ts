@@ -52,12 +52,6 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponsestring = {
-    code?: number;
-    data?: string;
-    message?: string;
-  };
-
   type BaseResponseUser = {
     code?: number;
     data?: User;
@@ -303,12 +297,16 @@ declare namespace API {
     total?: number;
   };
 
-  type uploadFileUsingPOSTParams = {
-    biz?: string;
+  type sendCodeUsingGETParams = {
+    /** emailNum */
+    emailNum: string;
+    /** captchaType */
+    captchaType: string;
   };
 
   type User = {
     createTime?: string;
+    email?: string;
     id?: number;
     isDelete?: number;
     updateTime?: string;
@@ -327,6 +325,8 @@ declare namespace API {
   };
 
   type UserLoginRequest = {
+    emailCaptcha?: string;
+    emailNum?: string;
     userAccount?: string;
     userPassword?: string;
   };
@@ -343,6 +343,8 @@ declare namespace API {
 
   type UserRegisterRequest = {
     checkPassword?: string;
+    emailCaptcha?: string;
+    emailNum?: string;
     userAccount?: string;
     userPassword?: string;
   };
@@ -361,6 +363,7 @@ declare namespace API {
 
   type UserVO = {
     createTime?: string;
+    email?: string;
     id?: number;
     userAvatar?: string;
     userName?: string;
