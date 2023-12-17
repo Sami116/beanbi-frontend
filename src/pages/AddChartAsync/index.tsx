@@ -41,6 +41,10 @@ const AddChartAsync: React.FC = () => {
     setLoading(false);
   };
 
+  const customRequest = (a: any) => {
+    a.onSuccess();
+  };
+
   return (
     <div className="add-chart">
       <Card title={'智能分析（异步）'}>
@@ -82,7 +86,7 @@ const AddChartAsync: React.FC = () => {
             label="原始数据"
             rules={[{ required: true, message: '请上传分析数据' }]}
           >
-            <Upload name="file" maxCount={1}>
+            <Upload name="file" maxCount={1} customRequest={customRequest}>
               <Button icon={<UploadOutlined />}>上传csv文件</Button>
             </Upload>
           </Form.Item>
