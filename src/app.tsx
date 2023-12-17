@@ -5,9 +5,11 @@ import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
 import { errorConfig } from './requestConfig';
-
+import logo from '../public/logo.svg';
 // const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
+
+
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -86,7 +88,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     //       </Link>,
     //     ]
     //   : [],
-    logo: 'logo.svg',
+    logo: logo,
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
