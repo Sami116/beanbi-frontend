@@ -1,7 +1,12 @@
 import Footer from '@/components/Footer';
-import { getLoginUserUsingGET, userLoginUsingPOST } from '@/services/beanbi/userController';
+import {
+  getLoginUserUsingGET,
+  sendCodeUsingGET,
+  userLoginByEmailUsingPOST,
+  userLoginUsingPOST
+} from '@/services/beanbi/userController';
 import { Link } from '@@/exports';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import {LockOutlined, MailOutlined, UserOutlined} from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { Helmet, history, useModel } from '@umijs/max';
@@ -9,9 +14,9 @@ import { message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
+import {ProFormCaptcha} from "@ant-design/pro-form";
 
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginUserVO>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
   const containerClassName = useEmotionCss(() => {
@@ -42,10 +47,18 @@ const Login: React.FC = () => {
   };
   const handleSubmit = async (values: API.UserLoginRequest) => {
     try {
+      let res;
       // 登录
-      const res = await userLoginUsingPOST({
-        ...values,
-      });
+      if (type === 'account') {
+        res = await userLoginUsingPOST({
+          ...values,
+        });
+      } else {
+        res = await userLoginByEmailUsingPOST({
+          ...values,
+        });
+      }
+
       if (res.message === 'ok') {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
@@ -97,6 +110,10 @@ const Login: React.FC = () => {
                 key: 'account',
                 label: '账户密码登录',
               },
+              {
+                key: 'email',
+                label: 'QQ邮箱登录',
+              },
             ]}
           />
 
@@ -129,6 +146,66 @@ const Login: React.FC = () => {
                     message: '密码是必填项！',
                   },
                 ]}
+              />
+            </>
+          )}
+
+          {type === 'email' && (
+            <>
+              <ProFormText
+                fieldProps={{
+                  size: 'large',
+                  prefix: <MailOutlined />,
+                }}
+                name="emailNum"
+                placeholder={'请输入QQ邮箱！'}
+                rules={[
+                  {
+                    required: true,
+                    message: '邮箱是必填项！',
+                  },
+                  {
+                    // pattern: /^1\d{10}$/,    手机号码正则表达式
+                    pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+                    message: '不合法的邮箱！',
+                  },
+                ]}
+              />
+              <ProFormCaptcha
+                fieldProps={{
+                  autoComplete: "new-password",
+                  size: 'large',
+                  prefix: <LockOutlined/>,
+                }}
+                captchaProps={{
+                  size: 'large',
+                }}
+                placeholder={'请输入验证码！'}
+                captchaTextRender={(timing, count) => {
+                  if (timing) {
+                    return `${count} ${'秒后重新获取'}`;
+                  }
+                  return '获取验证码';
+                }}
+                name="emailCaptcha"
+                phoneName="emailNum"
+                rules={[
+                  {
+                    required: true,
+                    message: '验证码是必填项！',
+                  },
+                ]}
+                onGetCaptcha={async (emailNum) => {
+                  const captchaType: string = 'login';
+                  const result = await sendCodeUsingGET({
+                    emailNum,
+                    captchaType,
+                  });
+                  if (result.data === false) {
+                    return;
+                  }
+                  message.success(result.data);
+                }}
               />
             </>
           )}
