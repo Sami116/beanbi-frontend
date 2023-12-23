@@ -1,4 +1,4 @@
-import { Question } from '@/components/RightContent';
+import { GitHubLink } from '@/components/RightContent';
 import { getLoginUserUsingGET } from '@/services/beanbi/userController';
 import { MehTwoTone } from '@ant-design/icons';
 import type { RunTimeLayoutConfig } from '@umijs/max';
@@ -41,7 +41,7 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
-    actionsRender: () => [<Question key="doc" />],
+    actionsRender: () => [<GitHubLink key={'doc'}/>],
     avatarProps: {
       src: initialState?.currentUser?.userAvatar ?? <MehTwoTone />,
       title: <AvatarName />,
